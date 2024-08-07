@@ -1,0 +1,12 @@
+torch==2.0.1
+torchvision==0.15.2
+diffusers
+accelerate
+transformers
+scipy
+opencv-python
+omegaconf
+einops
+git+https://github.com/pesser/splatting
+roma
+jaxtyping
