@@ -6,7 +6,7 @@
 
 # GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping
 
-[![arXiv](https://img.shields.io/badge/arXiv-red)](https://arxiv.org/abs/2405.17251) &nbsp; [![Project](https://img.shields.io/badge/Project-green)](https://genwarp-nvs.github.io/)
+[![Project](https://img.shields.io/badge/Project-green)](https://genwarp-nvs.github.io/) &nbsp; [![arXiv](https://img.shields.io/badge/arXiv-2405.17251-red.svg)](https://arxiv.org/abs/2405.17251) &nbsp; [![HuggingFace](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm.svg)](https://huggingface.co/Sony/genwarp)
 
 [Examples](#examples)
 | [How to use](#how-to-use)
@@ -104,7 +104,7 @@ genwarp
     │   └── reference_unet.pth
     └── sd-vae-ft-mse
         ├── config.json
-        └── diffusion_pytorch_model.bin
+        └── diffusion_pytorch_model.safetensors
 ```
 
 ### Inference
