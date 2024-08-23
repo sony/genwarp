@@ -3,3 +3,7 @@ jupyter
 # For ZoeDepth
 timm==0.6.7
 matplotlib==3.6.2
+
+# For demo
+gradio
+gradio_model3dgscamera
