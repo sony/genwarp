@@ -1,41 +1,49 @@
-<div align='center'>
-
-![concept image](https://genwarp-nvs.github.io/img/qual_1.png)
-
-</div>
-
 # GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping
 
-[![Project](https://img.shields.io/badge/Project-green)](https://genwarp-nvs.github.io/) &nbsp; [![arXiv](https://img.shields.io/badge/arXiv-2405.17251-red.svg)](https://arxiv.org/abs/2405.17251) &nbsp; [![HuggingFace](https://huggingface.co/datasets/huggingface/badges/resolve/main/model-on-hf-sm.svg)](https://huggingface.co/Sony/genwarp)
+[![Project Site](https://img.shields.io/badge/Project-Web-green)](https://genwarp-nvs.github.io/) &nbsp;
+[![Spaces](https://img.shields.io/badge/Spaces-Demo-yellow?logo=huggingface)](https://huggingface.co/spaces/Sony/GenWarp) &nbsp; 
+[![Github](https://img.shields.io/badge/Github-Repo-orange?logo=github)](https://github.com/sony/genwarp/) &nbsp; 
+[![Models](https://img.shields.io/badge/Models-checkpoints-blue?logo=huggingface)](https://huggingface.co/Sony/genwarp) &nbsp; 
+[![arXiv](https://img.shields.io/badge/arXiv-2405.17251-red?logo=arxiv)](https://arxiv.org/abs/2405.17251)
 
-[Examples](#examples)
+[Introduction](#introduction)
+| [Demo](#demo)
+| [Examples](#examples)
 | [How to use](#how-to-use)
 | [Citation](#citation)
 | [Acknowledgements](#acknowledgements)
+
+![concept image](https://github.com/user-attachments/assets/2c89bd9c-fa9e-40af-bc27-f00d3e12de3a)
 
 ## Introduction
 
 This repository is an official implementation for the paper "[GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping](https://genwarp-nvs.github.io/)". Genwarp can generate novel view images from a single input conditioned on camera poses. In this repository, we offer the codes for inference of the model. For detailed information, please refer the [paper](https://arxiv.org/abs/2405.17251).
 
-![Framework](https://genwarp-nvs.github.io/img/arch.png)
+![Framework](https://github.com/user-attachments/assets/b89d00cf-ea19-4354-b23d-07ccc0ee0f62)
+
+## Demo
+
+Here is a quick preview of GenWarp in action. Try it out by yourself at [Spaces](https://huggingface.co/spaces/Sony/GenWarp) or run it locally on your machine. See [How to use](#how-to-use) section for more details. (Left) 3D scene reconstructed from the input image and the estimated depth. (Middle) Warped image. (Right) Generated image.
+
+<video autoplay loop src="https://github.com/user-attachments/assets/f8cc4bcd-a30e-4c7d-8b9d-ef8820c5ac4a" width="1592" height="522"></video>
 
 ## Examples
 
 Our model can handle images from various domains including indoor/outdoor scenes, and even illustrations with challenging camera viewpoint changes.
 
-You can find examples on our [project page](https://genwarp-nvs.github.io/) and on our [paper](https://arxiv.org/abs/2405.17251).
+You can find examples on our [project page](https://genwarp-nvs.github.io/) and on our [paper](https://arxiv.org/abs/2405.17251). Or even better, you can try your favourite images on the live demo at [Spaces](https://huggingface.co/spaces/Sony/GenWarp).
 
-![Examples](https://genwarp-nvs.github.io/img/qual_ood.png)
+![Examples](https://github.com/user-attachments/assets/4490519b-db75-4034-a329-6c62c2b6875b)
 
 Generated novel views can be used for 3D reconstruction. This example we reconstructed 3D scene via [InstantSplat](https://instantsplat.github.io/). We generated the video using [this implementation](https://github.com/ONground-Korea/unofficial-Instantsplat).
 
-<video autoplay loop src="https://github.com/user-attachments/assets/c6646fdc-4e0e-468e-b801-83fecbd2c5e8" width="852" height="480"></video>
+<video autoplay loop src="https://github.com/user-attachments/assets/b3362776-815c-426f-bf39-d04722eb8a6f" width="852" height="480"></video>
 
 ## How to use
 
 ### Environment
 
-You can either add packages to your python environment or use Docker to build an python environment.
+You can either add packages to your python environment or use Docker to build an python environment. Commands below are all expected to run in the root directory of the repository.
 
 #### Use Docker to build an environment
 
@@ -49,12 +57,18 @@ docker run --gpus=all -it -v $(pwd):/workspace/genwarp -w /workspace/genwarp gen
 
 Inside the docker container, you can install packages as below.
 
-#### Add to your python environment
+#### Add dependencies to your python environment
 
-We tested the environment with python `>=3.10` and CUDA `=11.8`.
+We tested the environment with python `>=3.10` and CUDA `=11.8`. To add mandatory dependencies run the command below.
 
 ``` shell
 pip install -r requirements.txt
+```
+
+To run developmental codes such as the example provided in jupyter notebook and the live demo implemented by gradio, add extra dependencies via the command below.
+
+``` shell
+pip install -r requirements_dev.txt
 ```
 
 ### Download pretrained models
@@ -111,11 +125,13 @@ genwarp
 
 #### (Recommended) Install MDE module
 
-The model requires depth maps to generate novel views. To this end, users can install one of Monocular Depth Estimation (MDE) models publicly available. We recommend ZoeDepth.
+The model requires depth maps to generate novel views. To this end, users can install one of Monocular Depth Estimation (MDE) models publicly available. We used and therefore recommend ZoeDepth.
 
 ``` shell
 git clone git@github.com:isl-org/ZoeDepth.git extern/ZoeDepth
 ```
+
+To use ZoeDepth, please install `requirements_dev.txt` for additional packages.
 
 #### API
 
@@ -132,6 +148,15 @@ genwarp_cfg = dict(
     half_precision_weights=True
 )
 genwarp_nvs = GenWarp(cfg=genwarp_full_cfg)
+
+# Load MDE model.
+depth_estimator = torch.hub.load(
+    './extern/ZoeDepth',
+    'ZoeD_N',
+    source='local',
+    pretrained=True,
+    trust_repo=True
+).to('cuda')
 ```
 
 **Prepare inputs**
@@ -183,8 +208,8 @@ renders = genwarp_nvs(
     src_image=src_image,
     src_depth=src_depth,
     rel_view_mtx=rel_view_mtx,
-    src_proj_mtx=src_proj_mtx,
-    tar_proj_mtx=tar_proj_mtx
+    src_proj_mtx=proj_mtx,
+    tar_proj_mtx=proj_mtx
 )
 
 # Outputs.
@@ -204,10 +229,14 @@ To access a Jupyter Notebook running in a docker container, you may need to use 
 docker run --gpus=all -it --net host -v $(pwd):/workspace/genwarp -w /workspace/genwarp genwarp
 ```
 
-Install additional packages to run the Jupyter Notebook.
+Install `requirements_dev.txt` for additional packages  to run the Jupyter Notebook.
 
-```bash
-pip install -r requirements_dev.txt
+#### Live demo
+
+A interactive live demo is also available. Start gradio demo by running the command below, and goto [http://127.0.0.1:7860/](http://127.0.0.1:7860/)
+
+```shell
+python app.py
 ```
 
 ## Citation
