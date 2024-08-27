@@ -1,5 +1,6 @@
-from os.path import basename, splitext
+from os.path import basename, splitext, join
 from io import BytesIO
+import tempfile
 
 import gradio as gr
 from gradio_model3dgscamera import Model3DGSCamera
@@ -196,122 +197,124 @@ if 'genwarp_nvs' not in globals():
     )
     genwarp_nvs = GenWarp(cfg=genwarp_cfg)
 
-with gr.Blocks(
-    title='GenWarp Demo',
-    css='img {display: inline;}'
-) as demo:
-    # Internal states.
-    src_image = gr.State()
-    src_depth = gr.State()
-    proj_mtx = gr.State()
-    src_view_mtx = gr.State()
 
-    # Blocks.
-    gr.Markdown(
-        """
-        # GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping
-        [![Project Site](https://img.shields.io/badge/Project-Web-green)](https://genwarp-nvs.github.io/) &nbsp;
-        [![Spaces](https://img.shields.io/badge/Spaces-Demo-yellow?logo=huggingface)](https://huggingface.co/spaces/Sony/GenWarp) &nbsp;
-        [![Github](https://img.shields.io/badge/Github-Repo-orange?logo=github)](https://github.com/sony/genwarp/) &nbsp;
-        [![Models](https://img.shields.io/badge/Models-checkpoints-blue?logo=huggingface)](https://huggingface.co/Sony/genwarp) &nbsp;
-        [![arXiv](https://img.shields.io/badge/arXiv-2405.17251-red?logo=arxiv)](https://arxiv.org/abs/2405.17251)
+with tempfile.TemporaryDirectory() as tmpdir:
+    with gr.Blocks(
+        title='GenWarp Demo',
+        css='img {display: inline;}'
+    ) as demo:
+        # Internal states.
+        src_image = gr.State()
+        src_depth = gr.State()
+        proj_mtx = gr.State()
+        src_view_mtx = gr.State()
 
-        ## Introduction
-        This is an official demo for the paper "[GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping](https://genwarp-nvs.github.io/)". Genwarp can generate novel view images from a single input conditioned on camera poses. In this demo, we offer a basic use of inference of the model. For detailed information, please refer the [paper](https://arxiv.org/abs/2405.17251).
+        # Blocks.
+        gr.Markdown(
+            """
+            # GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping
+            [![Project Site](https://img.shields.io/badge/Project-Web-green)](https://genwarp-nvs.github.io/) &nbsp;
+            [![Spaces](https://img.shields.io/badge/Spaces-Demo-yellow?logo=huggingface)](https://huggingface.co/spaces/Sony/GenWarp) &nbsp;
+            [![Github](https://img.shields.io/badge/Github-Repo-orange?logo=github)](https://github.com/sony/genwarp/) &nbsp;
+            [![Models](https://img.shields.io/badge/Models-checkpoints-blue?logo=huggingface)](https://huggingface.co/Sony/genwarp) &nbsp;
+            [![arXiv](https://img.shields.io/badge/arXiv-2405.17251-red?logo=arxiv)](https://arxiv.org/abs/2405.17251)
 
-        ## How to Use
-        1. Upload a reference image to "Reference Input"
-            - You can also select a image from "Examples"
-        2. Move the camera to your desired view in "Unprojected 3DGS" 3D viewer
-        3. Hit "Generate a novel view" button and check the result
+            ## Introduction
+            This is an official demo for the paper "[GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping](https://genwarp-nvs.github.io/)". Genwarp can generate novel view images from a single input conditioned on camera poses. In this demo, we offer a basic use of inference of the model. For detailed information, please refer the [paper](https://arxiv.org/abs/2405.17251).
 
-        """
-    )
-    file = gr.File(label='Reference Input', file_types=['image'])
-    examples = gr.Examples(
-        examples=['./assets/pexels-heyho-5998120_19mm.jpg',
-                  './assets/pexels-itsterrymag-12639296_24mm.jpg'],
-        inputs=file
-    )
-    with gr.Row():
-        image_widget = gr.Image(
-            label='Reference View', type='filepath',
-            interactive=False
+            ## How to Use
+            1. Upload a reference image to "Reference Input"
+                - You can also select a image from "Examples"
+            2. Move the camera to your desired view in "Unprojected 3DGS" 3D viewer
+            3. Hit "Generate a novel view" button and check the result
+
+            """
         )
-        depth_widget = gr.Image(label='Estimated Depth', type='pil')
-        viewer = Model3DGSCamera(
-            label = 'Unprojected 3DGS',
-            width=IMAGE_SIZE,
-            height=IMAGE_SIZE,
-            camera_width=IMAGE_SIZE,
-            camera_height=IMAGE_SIZE,
-            camera_fx=IMAGE_SIZE / (np.tan(FOVY / 2.)) / 2.,
-            camera_fy=IMAGE_SIZE / (np.tan(FOVY / 2.)) / 2.,
-            camera_near=NEAR,
-            camera_far=FAR
+        file = gr.File(label='Reference Input', file_types=['image'])
+        examples = gr.Examples(
+            examples=['./assets/pexels-heyho-5998120_19mm.jpg',
+                    './assets/pexels-itsterrymag-12639296_24mm.jpg'],
+            inputs=file
         )
-    button = gr.Button('Generate a novel view', size='lg', variant='primary')
-    with gr.Row():
-        warped_widget = gr.Image(
-            label='Warped Image', type='pil', interactive=False
-        )
-        gen_widget = gr.Image(
-            label='Generated View', type='pil', interactive=False
-        )
+        with gr.Row():
+            image_widget = gr.Image(
+                label='Reference View', type='filepath',
+                interactive=False
+            )
+            depth_widget = gr.Image(label='Estimated Depth', type='pil')
+            viewer = Model3DGSCamera(
+                label = 'Unprojected 3DGS',
+                width=IMAGE_SIZE,
+                height=IMAGE_SIZE,
+                camera_width=IMAGE_SIZE,
+                camera_height=IMAGE_SIZE,
+                camera_fx=IMAGE_SIZE / (np.tan(FOVY / 2.)) / 2.,
+                camera_fy=IMAGE_SIZE / (np.tan(FOVY / 2.)) / 2.,
+                camera_near=NEAR,
+                camera_far=FAR
+            )
+        button = gr.Button('Generate a novel view', size='lg', variant='primary')
+        with gr.Row():
+            warped_widget = gr.Image(
+                label='Warped Image', type='pil', interactive=False
+            )
+            gen_widget = gr.Image(
+                label='Generated View', type='pil', interactive=False
+            )
 
-    # Callbacks
-    def cb_mde(image_file: str):
-        image = to_tensor(crop(Image.open(
-            image_file
-        ).convert('RGB')).resize((IMAGE_SIZE, IMAGE_SIZE)))[None].cuda()
-        depth = mde.infer(image)
-        depth_image = to_pil_image(colorize(depth[0]))
-        return to_pil_image(image[0]), depth_image, image, depth
+        # Callbacks
+        def cb_mde(image_file: str):
+            image = to_tensor(crop(Image.open(
+                image_file
+            ).convert('RGB')).resize((IMAGE_SIZE, IMAGE_SIZE)))[None].cuda()
+            depth = mde.infer(image)
+            depth_image = to_pil_image(colorize(depth[0]))
+            return to_pil_image(image[0]), depth_image, image, depth
 
-    def cb_3d(image, depth, image_file):
-        xyz, camera_pos, view_mtx, proj_mtx = unproject(depth)
-        rgb = rearrange(image, 'b c h w -> b (h w) c')[0]
-        splat_file = f'./{splitext(basename(image_file))[0]}.splat'
-        save_as_splat(splat_file, xyz.cpu().detach().numpy(), rgb.cpu().detach().numpy())
-        return (splat_file, camera_pos, None), view_mtx, proj_mtx
+        def cb_3d(image, depth, image_file):
+            xyz, camera_pos, view_mtx, proj_mtx = unproject(depth)
+            rgb = rearrange(image, 'b c h w -> b (h w) c')[0]
+            splat_file = join(tmpdir, f'./{splitext(basename(image_file))[0]}.splat')
+            save_as_splat(splat_file, xyz.cpu().detach().numpy(), rgb.cpu().detach().numpy())
+            return (splat_file, camera_pos, None), view_mtx, proj_mtx
 
-    def cb_generate(viewer, image, depth, src_view_mtx, proj_mtx):
-        src_camera_pos = viewer[1]
-        src_camera_rot = viewer[2]
-        tar_view_mtx = view_from_rt(src_camera_pos, src_camera_rot)
-        tar_view_mtx = torch.from_numpy(tar_view_mtx).to(image)
-        rel_view_mtx = (
-            tar_view_mtx @ torch.linalg.inv(src_view_mtx.to(image))
-        ).to(image)
+        def cb_generate(viewer, image, depth, src_view_mtx, proj_mtx):
+            src_camera_pos = viewer[1]
+            src_camera_rot = viewer[2]
+            tar_view_mtx = view_from_rt(src_camera_pos, src_camera_rot)
+            tar_view_mtx = torch.from_numpy(tar_view_mtx).to(image)
+            rel_view_mtx = (
+                tar_view_mtx @ torch.linalg.inv(src_view_mtx.to(image))
+            ).to(image)
 
-        # GenWarp.
-        renders = genwarp_nvs(
-            src_image=image.half(),
-            src_depth=depth.half(),
-            rel_view_mtx=rel_view_mtx.half(),
-            src_proj_mtx=proj_mtx.half(),
-            tar_proj_mtx=proj_mtx.half()
-        )
+            # GenWarp.
+            renders = genwarp_nvs(
+                src_image=image.half(),
+                src_depth=depth.half(),
+                rel_view_mtx=rel_view_mtx.half(),
+                src_proj_mtx=proj_mtx.half(),
+                tar_proj_mtx=proj_mtx.half()
+            )
 
-        warped = renders['warped']
-        synthesized = renders['synthesized']
-        warped_pil = to_pil_image(warped[0])
-        synthesized_pil = to_pil_image(synthesized[0])
+            warped = renders['warped']
+            synthesized = renders['synthesized']
+            warped_pil = to_pil_image(warped[0])
+            synthesized_pil = to_pil_image(synthesized[0])
 
-        return warped_pil, synthesized_pil
+            return warped_pil, synthesized_pil
 
-    # Events
-    file.change(
-        fn=cb_mde,
-        inputs=file,
-        outputs=[image_widget, depth_widget, src_image, src_depth]
-    ).then(
-        fn=cb_3d,
-        inputs=[src_image, src_depth, image_widget],
-        outputs=[viewer, src_view_mtx, proj_mtx])
-    button.click(
-        fn=cb_generate,
-        inputs=[viewer, src_image, src_depth, src_view_mtx, proj_mtx],
-        outputs=[warped_widget, gen_widget])
+        # Events
+        file.change(
+            fn=cb_mde,
+            inputs=file,
+            outputs=[image_widget, depth_widget, src_image, src_depth]
+        ).then(
+            fn=cb_3d,
+            inputs=[src_image, src_depth, image_widget],
+            outputs=[viewer, src_view_mtx, proj_mtx])
+        button.click(
+            fn=cb_generate,
+            inputs=[viewer, src_image, src_depth, src_view_mtx, proj_mtx],
+            outputs=[warped_widget, gen_widget])
 
-demo.launch()
+    demo.launch()
