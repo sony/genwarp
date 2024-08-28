@@ -17,7 +17,7 @@
 
 ## Introduction
 
-This repository is an official implementation for the paper "[GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping](https://genwarp-nvs.github.io/)". Genwarp can generate novel view images from a single input conditioned on camera poses. In this repository, we offer the codes for inference of the model. For detailed information, please refer the [paper](https://arxiv.org/abs/2405.17251).
+This repository is an official implementation for the paper "[GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping](https://genwarp-nvs.github.io/)". Genwarp can generate novel view images from a single input conditioned on camera poses. In this repository, we offer the codes for inference of the model. For detailed information, please refer to the [paper](https://arxiv.org/abs/2405.17251).
 
 ![Framework](https://github.com/user-attachments/assets/b89d00cf-ea19-4354-b23d-07ccc0ee0f62)
 
@@ -35,7 +35,7 @@ You can find examples on our [project page](https://genwarp-nvs.github.io/) and 
 
 ![Examples](https://github.com/user-attachments/assets/4490519b-db75-4034-a329-6c62c2b6875b)
 
-Generated novel views can be used for 3D reconstruction. This example we reconstructed 3D scene via [InstantSplat](https://instantsplat.github.io/). We generated the video using [this implementation](https://github.com/ONground-Korea/unofficial-Instantsplat).
+Generated novel views can be used for 3D reconstruction. In the example below, we reconstructed a 3D scene via [InstantSplat](https://instantsplat.github.io/). We generated the video using [this implementation](https://github.com/ONground-Korea/unofficial-Instantsplat).
 
 <video autoplay loop src="https://github.com/user-attachments/assets/b3362776-815c-426f-bf39-d04722eb8a6f" width="852" height="480"></video>
 
@@ -48,7 +48,7 @@ You can either add packages to your python environment or use Docker to build an
 #### Use Docker to build an environment
 
 > [!NOTE]
-> You may want to change username and uld variables written in DockerFile. Please check DockerFile before running the commands below.
+> You may want to change username and uid variables written in DockerFile. Please check DockerFile before running the commands below.
 
 ``` shell
 docker build . -t genwarp:latest
@@ -73,7 +73,7 @@ pip install -r requirements_dev.txt
 
 ### Download pretrained models
 
-GenWarp uses pretrained models which consist of both our finetuned models and publicly available third party ones. Download all the models to `checkpoints` directory or anywhere of your choice. You can do it manually or by the [download_models.sh](scripts/download_models.sh) script.
+GenWarp uses pretrained models which consist of both our finetuned models and publicly available third-party ones. Download all the models to `checkpoints` directory or anywhere of your choice. You can do it manually or by the [download_models.sh](scripts/download_models.sh) script.
 
 #### Download script
 
@@ -137,7 +137,7 @@ To use ZoeDepth, please install `requirements_dev.txt` for additional packages.
 
 **Initialisation**
 
-Import GenWarp class and instantiate with the config. Set the path to the checkpoints directory to `pretrained_model_path` and select the model version in `checkpoint_name`. For more options, check out [GenWarp.py](genwarp/GenWarp.py)
+Import GenWarp class and instantiate it with a config. Set the path to the checkpoints directory to `pretrained_model_path` and select the model version in `checkpoint_name`. For more options, check out [GenWarp.py](genwarp/GenWarp.py)
 
 ``` python
 from genwarp import GenWarp
@@ -223,7 +223,7 @@ renders['correspondence']  # Correspondence map.
 
 We provide a complete example in [genwarp_inference.ipynb](examples/genwarp_inference.ipynb)
 
-To access a Jupyter Notebook running in a docker container, you may need to use the host's network. For further details, please refer the manual of Docker.
+To access a Jupyter Notebook running in a docker container, you may need to use the host's network. For further details, please refer to the manual of Docker.
 
 ``` shell
 docker run --gpus=all -it --net host -v $(pwd):/workspace/genwarp -w /workspace/genwarp genwarp
