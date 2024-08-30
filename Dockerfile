@@ -25,7 +25,7 @@ RUN apt install -y \
     libglm-dev \
     mesa-utils
 
-RUN apt install -y \
+RUN apt update && apt install -y \
     git \
     curl \
     ffmpeg \
