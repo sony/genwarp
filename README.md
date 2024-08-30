@@ -128,7 +128,7 @@ genwarp
 The model requires depth maps to generate novel views. To this end, users can install one of Monocular Depth Estimation (MDE) models publicly available. We used and therefore recommend ZoeDepth.
 
 ``` shell
-git clone git@github.com:isl-org/ZoeDepth.git extern/ZoeDepth
+git clone https://github.com/isl-org/ZoeDepth.git extern/ZoeDepth
 ```
 
 To use ZoeDepth, please install `requirements_dev.txt` for additional packages.
@@ -219,7 +219,7 @@ renders['mask']            # Mask image (mask=1 where visible pixels).
 renders['correspondence']  # Correspondence map.
 ```
 
-#### Example notebook
+### Example notebook
 
 We provide a complete example in [genwarp_inference.ipynb](examples/genwarp_inference.ipynb)
 
@@ -231,9 +231,12 @@ docker run --gpus=all -it --net host -v $(pwd):/workspace/genwarp -w /workspace/
 
 Install `requirements_dev.txt` for additional packages  to run the Jupyter Notebook.
 
-#### Live demo
+### Gradio live demo
 
-A interactive live demo is also available. Start gradio demo by running the command below, and goto [http://127.0.0.1:7860/](http://127.0.0.1:7860/)
+An interactive live demo is also available. Start gradio demo by running the command below, and goto [http://127.0.0.1:7860/](http://127.0.0.1:7860/)
+If you are running it on the server, be sure to forward the port 7860.
+
+Or you can just visit [Spaces](https://huggingface.co/spaces/Sony/genwarp) hosted by Hugging Face to try it now.
 
 ```shell
 python app.py
