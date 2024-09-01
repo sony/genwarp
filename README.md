@@ -43,7 +43,7 @@ Generated novel views can be used for 3D reconstruction. In the example below, w
 
 ### Environment
 
-You can either add packages to your python environment or use Docker to build an python environment. Commands below are all expected to run in the root directory of the repository.
+We tested our codes on Ubuntu 20.04 with nVidia A100 GPU. If you're using other machines like Windows, consider using Docker. You can either add packages to your python environment or use Docker to build an python environment. Commands below are all expected to run in the root directory of the repository.
 
 #### Use Docker to build an environment
 
