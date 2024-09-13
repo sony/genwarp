@@ -15,6 +15,11 @@
 
 ![concept image](https://github.com/user-attachments/assets/2c89bd9c-fa9e-40af-bc27-f00d3e12de3a)
 
+## Updates
+
+- **13/09/2024:** Added example with Depth Anything V2
+- **27/08/2024:** Codes and demos are released
+
 ## Introduction
 
 This repository is an official implementation for the paper "[GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping](https://genwarp-nvs.github.io/)". Genwarp can generate novel view images from a single input conditioned on camera poses. In this repository, we offer the codes for inference of the model. For detailed information, please refer to the [paper](https://arxiv.org/abs/2405.17251).
@@ -123,15 +128,30 @@ genwarp
 
 ### Inference
 
-#### (Recommended) Install MDE module
+#### Install MDE module
 
-The model requires depth maps to generate novel views. To this end, users can install one of Monocular Depth Estimation (MDE) models publicly available. We used and therefore recommend ZoeDepth.
+The model requires depth maps to generate novel views although such a model is not included this repository. To this end, users can install one of Monocular Depth Estimation (MDE) models publicly available.
+
+**ZoeDepth**
+
+We used and therefore recommend [ZoeDepth](https://github.com/isl-org/ZoeDepth).
 
 ``` shell
 git clone https://github.com/isl-org/ZoeDepth.git extern/ZoeDepth
 ```
 
-To use ZoeDepth, please install `requirements_dev.txt` for additional packages.
+> [!TIP]
+> To use ZoeDepth, please install `requirements_dev.txt` for additional packages.
+
+**Depth Anything V2**
+
+More recent models are also available. [Depth Anything V2](https://github.com/DepthAnything/Depth-Anything-V2) is one of the SOTA models of depth estimation. You can use [the metric depth version](https://github.com/DepthAnything/Depth-Anything-V2/tree/main/metric_depth).
+
+``` shell
+git clone https://github.com/DepthAnything/Depth-Anything-V2.git extern/Depth-Anything-V2
+```
+
+[Download the models](https://github.com/DepthAnything/Depth-Anything-V2/tree/main/metric_depth#pre-trained-models) from their repository. And see the [example notebook](examples/genwarp_inference_dav2.ipynb) for the usage with GenWarp. Notice that they have separate models for indoor and outdoor scenes respectively.
 
 #### API
 
@@ -246,13 +266,13 @@ python app.py
 
 ``` bibtex
 @misc{seo2024genwarpsingleimagenovel,
-  title={GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping}, 
+  title={GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping},
   author={Junyoung Seo and Kazumi Fukuda and Takashi Shibuya and Takuya Narihira and Naoki Murata and Shoukang Hu and Chieh-Hsin Lai and Seungryong Kim and Yuki Mitsufuji},
   year={2024},
   eprint={2405.17251},
   archivePrefix={arXiv},
   primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2405.17251}, 
+  url={https://arxiv.org/abs/2405.17251},
 }
 ```
 
