@@ -276,12 +276,11 @@ python app.py
 ## Citation
 
 ``` bibtex
-@inproceedings{seo2024genwarp,
+@article{seo2024genwarp,
   title={GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping},
   author={Junyoung Seo and Kazumi Fukuda and Takashi Shibuya and Takuya Narihira and Naoki Murata and Shoukang Hu and Chieh-Hsin Lai and Seungryong Kim and Yuki Mitsufuji},
   year={2024},
-  booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
-  url={https://openreview.net/forum?id=rLJisJmMKw}
+  journal={arXiv preprint arXiv:2405.17251},
 }
 ```
 
