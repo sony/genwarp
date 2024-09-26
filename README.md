@@ -1,5 +1,15 @@
 # GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping
 
+_<p style="text-align:center;">NeurIPS 2024</p>_
+
+<p style="text-align:right;">
+Junyoung Seo<sup>*,1,3</sup> Kazumi Fukuda<sup>1</sup> Takashi Shibuya<sup>1</sup> Takuya Narihira<sup>1</sup>
+Naoki Murata<sup>1</sup> Shoukang Hu<sup>1</sup> Chieh-Hsin Lai<sup>1</sup>
+Seungryong Kim<sup>†,3</sup> Yuki Mitsufuji<sup>†,1,2</sup></br>
+<sub><sup>1</sup>Sony AI	<sup>2</sup>Sony Group Corporation	<sup>3</sup>KAIST</sub><br>
+<sub><sup>*</sup>Work done during an internship at Sony AI. <sup>†</sup>Co-corresponding authors.</sub>
+</p>
+
 [![Project Site](https://img.shields.io/badge/Project-Web-green)](https://genwarp-nvs.github.io/) &nbsp;
 [![Spaces](https://img.shields.io/badge/Spaces-Demo-yellow?logo=huggingface)](https://huggingface.co/spaces/Sony/genwarp) &nbsp; 
 [![Github](https://img.shields.io/badge/Github-Repo-orange?logo=github)](https://github.com/sony/genwarp/) &nbsp; 
@@ -17,6 +27,7 @@
 
 ## Updates
 
+- **26/09/2024:** Our paper is accepted for NeurIPS 2024
 - **13/09/2024:** Added example with Depth Anything V2
 - **27/08/2024:** Codes and demos are released
 
@@ -265,14 +276,12 @@ python app.py
 ## Citation
 
 ``` bibtex
-@misc{seo2024genwarpsingleimagenovel,
+@inproceedings{seo2024genwarp,
   title={GenWarp: Single Image to Novel Views with Semantic-Preserving Generative Warping},
   author={Junyoung Seo and Kazumi Fukuda and Takashi Shibuya and Takuya Narihira and Naoki Murata and Shoukang Hu and Chieh-Hsin Lai and Seungryong Kim and Yuki Mitsufuji},
   year={2024},
-  eprint={2405.17251},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2405.17251},
+  booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+  url={https://openreview.net/forum?id=rLJisJmMKw}
 }
 ```
 
